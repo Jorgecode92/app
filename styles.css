@@ -16,7 +16,7 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: "Trebuchet MS", "Arial Narrow", sans-serif;
   color: var(--text);
   overflow-x: hidden;
@@ -27,6 +27,7 @@ body {
 
 .page {
   width: min(1100px, calc(100% - 2rem));
+  min-height: 100dvh;
   margin: 0 auto;
   padding: 2rem 0 calc(2.5rem + env(safe-area-inset-bottom, 0px));
 }
@@ -67,6 +68,13 @@ body {
     0 16px 40px rgba(0, 0, 0, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(14px);
+}
+
+.game-stage {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hud {
@@ -258,7 +266,118 @@ kbd {
   }
 }
 
-@media (max-height: 560px) and (orientation: landscape) {
+body.touch-layout {
+  overflow: hidden;
+}
+
+body.touch-layout .page {
+  width: 100%;
+  padding: 0;
+}
+
+body.touch-layout .hero,
+body.touch-layout .help,
+body.touch-layout .mode-hint {
+  display: none;
+}
+
+body.touch-layout .game-shell {
+  min-height: 100dvh;
+  padding:
+    max(0.75rem, env(safe-area-inset-top, 0px))
+    0.75rem
+    max(0.75rem, env(safe-area-inset-bottom, 0px))
+    0.75rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 0.75rem;
+}
+
+body.touch-layout .hud,
+body.touch-layout .game-meta,
+body.touch-layout .touch-controls {
+  margin: 0;
+}
+
+body.touch-layout .hud {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+body.touch-layout .stat {
+  padding: 0.65rem 0.7rem;
+  border-radius: 8px;
+}
+
+body.touch-layout .stat span {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+body.touch-layout .stat strong {
+  margin-top: 0.2rem;
+  font-size: 1.05rem;
+}
+
+body.touch-layout .game-meta {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+body.touch-layout .utility-button {
+  width: auto;
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+body.touch-layout .game-stage {
+  overflow: hidden;
+}
+
+body.touch-layout #game {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+body.touch-layout .touch-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+body.touch-layout .touch-controls button {
+  min-height: clamp(56px, 11dvh, 82px);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+@media (orientation: landscape) and (hover: none) and (pointer: coarse) {
+  body.touch-layout .game-shell {
+    gap: 0.5rem;
+  }
+
+  body.touch-layout .stat {
+    padding: 0.55rem 0.65rem;
+  }
+
+  body.touch-layout .touch-controls button {
+    min-height: 56px;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) and (hover: hover) {
   .page {
     padding-top: 0.6rem;
   }

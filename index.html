@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#031116" />
     <title>Space Invaders</title>
     <link rel="stylesheet" href="styles.css" />
@@ -48,12 +51,14 @@
           </button>
         </div>
 
-        <canvas
-          id="game"
-          width="960"
-          height="640"
-          aria-label="Space Invaders game field"
-        ></canvas>
+        <div class="game-stage">
+          <canvas
+            id="game"
+            width="960"
+            height="640"
+            aria-label="Space Invaders game field"
+          ></canvas>
+        </div>
 
         <div class="help">
           <p>Desktop: move with <kbd>A</kbd>/<kbd>D</kbd> or the arrow keys.</p>
