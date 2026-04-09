@@ -15,6 +15,18 @@ const BOARD_RATIO = WIDTH / HEIGHT;
 const STORAGE_KEY = "space-invaders-best-score";
 const TOUCH_LAYOUT_CLASS = "touch-layout";
 const touchQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
+const THEME = {
+  text: "#f8fbff",
+  muted: "#98a9c0",
+  accent: "#41d7b7",
+  accentCool: "#6ea8ff",
+  accentStrong: "#ff8b5e",
+  accentSoft: "#ffd27a",
+  danger: "#ff7c87",
+  bgTop: "#081224",
+  bgMid: "#0d1830",
+  bgBottom: "#040813",
+};
 
 const input = {
   left: false,
@@ -417,7 +429,7 @@ function handleShieldCollisions(entity) {
   createParticles(
     destroyed.x + destroyed.width / 2,
     destroyed.y + destroyed.height / 2,
-    "#73d9ab",
+    THEME.accent,
     5,
   );
   return true;
@@ -441,7 +453,12 @@ function handleCollisions() {
         bullet.dead = true;
         state.score += 20 + (5 - target.row) * 8;
         updateBestScore();
-        createParticles(target.x + target.width / 2, target.y + target.height / 2, "#f7b538", 10);
+        createParticles(
+          target.x + target.width / 2,
+          target.y + target.height / 2,
+          THEME.accentStrong,
+          10,
+        );
       }
       return;
     }
@@ -450,7 +467,7 @@ function handleCollisions() {
       bullet.dead = true;
       state.lives -= 1;
       player.hitTimer = 1;
-      createParticles(player.x + player.width / 2, player.y + player.height / 2, "#ff7c87", 16);
+      createParticles(player.x + player.width / 2, player.y + player.height / 2, THEME.danger, 16);
 
       if (state.lives <= 0) {
         state.status = "gameover";
@@ -476,7 +493,7 @@ function handleCollisions() {
       if (intersects(first, second)) {
         first.dead = true;
         second.dead = true;
-        createParticles(first.x, first.y, "#ecf9f2", 6);
+        createParticles(first.x, first.y, THEME.text, 6);
         break;
       }
     }
@@ -540,9 +557,51 @@ function update(dt) {
 
 function drawStars() {
   stars.forEach((star) => {
-    ctx.fillStyle = `rgba(236, 249, 242, ${star.alpha})`;
+    ctx.fillStyle = `rgba(248, 251, 255, ${star.alpha})`;
     ctx.fillRect(star.x, star.y, star.size, star.size);
   });
+}
+
+function drawArena() {
+  const backdrop = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+  backdrop.addColorStop(0, THEME.bgTop);
+  backdrop.addColorStop(0.56, THEME.bgMid);
+  backdrop.addColorStop(1, THEME.bgBottom);
+  ctx.fillStyle = backdrop;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  const glow = ctx.createRadialGradient(WIDTH / 2, HEIGHT * 0.18, 30, WIDTH / 2, HEIGHT * 0.18, HEIGHT * 0.78);
+  glow.addColorStop(0, "rgba(110, 168, 255, 0.16)");
+  glow.addColorStop(0.35, "rgba(65, 215, 183, 0.08)");
+  glow.addColorStop(1, "rgba(4, 8, 19, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.strokeStyle = "rgba(110, 168, 255, 0.08)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+
+  for (let y = 94; y < HEIGHT - 54; y += 74) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(WIDTH, y);
+  }
+
+  for (let x = 84; x < WIDTH; x += 84) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, HEIGHT - 40);
+  }
+
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(65, 215, 183, 0.08)";
+  ctx.fillRect(0, HEIGHT - 132, WIDTH, 132);
+
+  ctx.strokeStyle = "rgba(65, 215, 183, 0.18)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, HEIGHT - 132);
+  ctx.lineTo(WIDTH, HEIGHT - 132);
+  ctx.stroke();
 }
 
 function drawPlayer() {
@@ -552,19 +611,24 @@ function drawPlayer() {
 
   ctx.save();
   ctx.translate(player.x, player.y);
-  ctx.fillStyle = "#73d9ab";
+  ctx.fillStyle = THEME.accent;
   ctx.fillRect(16, 0, 36, 8);
   ctx.fillRect(8, 8, 52, 8);
   ctx.fillRect(0, 16, 68, 8);
-  ctx.fillStyle = "#ecf9f2";
+  ctx.fillStyle = THEME.text;
   ctx.fillRect(30, -8, 8, 8);
   ctx.restore();
 }
 
 function drawInvader(invader) {
-  const tint = ["#ff7c87", "#f7b538", "#73d9ab", "#8ad8ff", "#ecf9f2", "#c9a7ff"][
-    invader.row % 6
-  ];
+  const tint = [
+    THEME.danger,
+    THEME.accentStrong,
+    THEME.accent,
+    THEME.accentCool,
+    THEME.text,
+    "#ffb8a1",
+  ][invader.row % 6];
 
   ctx.save();
   ctx.translate(invader.x, invader.y);
@@ -583,14 +647,14 @@ function drawInvader(invader) {
 
 function drawBullets() {
   bullets.forEach((bullet) => {
-    ctx.fillStyle = bullet.owner === "player" ? "#f7b538" : "#ff7c87";
+    ctx.fillStyle = bullet.owner === "player" ? THEME.accentSoft : THEME.danger;
     ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
   });
 }
 
 function drawShields() {
   shields.forEach((block) => {
-    ctx.fillStyle = "#73d9ab";
+    ctx.fillStyle = THEME.accent;
     ctx.fillRect(block.x, block.y, block.width, block.height);
   });
 }
@@ -606,14 +670,14 @@ function drawParticles() {
 
 function drawOverlay() {
   if (state.status === "gameover") {
-    ctx.fillStyle = "rgba(3, 17, 22, 0.72)";
+    ctx.fillStyle = "rgba(4, 8, 19, 0.76)";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = "#ecf9f2";
+    ctx.fillStyle = THEME.text;
     ctx.textAlign = "center";
-    ctx.font = '700 58px "Trebuchet MS", sans-serif';
+    ctx.font = '700 58px "Bahnschrift", "Arial Narrow", sans-serif';
     ctx.fillText("GAME OVER", WIDTH / 2, HEIGHT / 2 - 28);
-    ctx.font = '400 24px "Trebuchet MS", sans-serif';
-    ctx.fillStyle = "#98cab8";
+    ctx.font = '400 24px "Aptos", "Segoe UI", sans-serif';
+    ctx.fillStyle = THEME.muted;
     ctx.fillText(
       usesTouchLayout()
         ? "Tap Restart or the playfield to launch a new run"
@@ -625,14 +689,14 @@ function drawOverlay() {
   }
 
   if (state.status === "intermission") {
-    ctx.fillStyle = "rgba(3, 17, 22, 0.38)";
+    ctx.fillStyle = "rgba(4, 8, 19, 0.44)";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = "#f7b538";
+    ctx.fillStyle = THEME.accentStrong;
     ctx.textAlign = "center";
-    ctx.font = '700 44px "Trebuchet MS", sans-serif';
+    ctx.font = '700 44px "Bahnschrift", "Arial Narrow", sans-serif';
     ctx.fillText("Sector Clear", WIDTH / 2, HEIGHT / 2 - 10);
-    ctx.font = '400 22px "Trebuchet MS", sans-serif';
-    ctx.fillStyle = "#ecf9f2";
+    ctx.font = '400 22px "Aptos", "Segoe UI", sans-serif';
+    ctx.fillStyle = THEME.text;
     ctx.fillText(`Wave ${state.level + 1} incoming`, WIDTH / 2, HEIGHT / 2 + 26);
     return;
   }
@@ -641,20 +705,17 @@ function drawOverlay() {
     return;
   }
 
-  ctx.fillStyle = "rgba(3, 17, 22, 0.2)";
-  ctx.fillRect(0, HEIGHT - 90, WIDTH, 90);
-  ctx.fillStyle = "#98cab8";
+  ctx.fillStyle = "rgba(4, 8, 19, 0.24)";
+  ctx.fillRect(0, HEIGHT - 92, WIDTH, 92);
+  ctx.fillStyle = THEME.muted;
   ctx.textAlign = "center";
-  ctx.font = '400 24px "Trebuchet MS", sans-serif';
+  ctx.font = '400 24px "Aptos", "Segoe UI", sans-serif';
   ctx.fillText("Clear the formation before it reaches your line", WIDTH / 2, HEIGHT - 38);
 }
 
 function render() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  ctx.fillStyle = "#07131b";
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
+  drawArena();
   drawStars();
   drawShields();
   invaders.forEach((invader) => {
@@ -666,7 +727,7 @@ function render() {
   drawPlayer();
   drawParticles();
 
-  ctx.fillStyle = "rgba(115, 217, 171, 0.55)";
+  ctx.fillStyle = "rgba(65, 215, 183, 0.52)";
   ctx.fillRect(0, HEIGHT - 28, WIDTH, 2);
 
   drawOverlay();
