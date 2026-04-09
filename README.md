@@ -1,7 +1,14 @@
 # app
 
-Starter repository initialized with Git.
+Simple static browser project containing a vanilla JavaScript Space Invaders
+game.
 
 ## Getting Started
 
-Add your project files here and commit as you go.
+Open `index.html` in a browser to play locally.
+
+Controls:
+
+- Move with `A` / `D` or the left and right arrow keys
+- Fire with `Space`
+- Press `Enter` after a loss to restart

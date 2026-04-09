@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Invaders</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Arcade Prototype</p>
+        <h1>Space Invaders</h1>
+        <p class="lede">
+          Hold the line, clear each wave, and keep the mothership from breaking
+          through.
+        </p>
+      </section>
+
+      <section class="game-shell">
+        <div class="hud" aria-label="Game stats">
+          <div class="stat">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat">
+            <span>Lives</span>
+            <strong id="lives">3</strong>
+          </div>
+          <div class="stat">
+            <span>Wave</span>
+            <strong id="level">1</strong>
+          </div>
+          <div class="stat">
+            <span>Best</span>
+            <strong id="best">0</strong>
+          </div>
+        </div>
+
+        <canvas
+          id="game"
+          width="960"
+          height="640"
+          aria-label="Space Invaders game field"
+        ></canvas>
+
+        <div class="help">
+          <p>Move with <kbd>A</kbd>/<kbd>D</kbd> or the arrow keys.</p>
+          <p>Fire with <kbd>Space</kbd>. Press <kbd>Enter</kbd> to restart.</p>
+        </div>
+
+        <div class="touch-controls" aria-label="Touch controls">
+          <button type="button" data-action="left">Left</button>
+          <button type="button" data-action="fire" class="fire-button">
+            Fire
+          </button>
+          <button type="button" data-action="right">Right</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
