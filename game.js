@@ -5,10 +5,13 @@ const scoreNode = document.getElementById("score");
 const livesNode = document.getElementById("lives");
 const levelNode = document.getElementById("level");
 const bestNode = document.getElementById("best");
+const modeHintNode = document.getElementById("mode-hint");
+const restartButton = document.getElementById("restart-button");
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 const STORAGE_KEY = "space-invaders-best-score";
+const touchQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
 
 const input = {
   left: false,
@@ -62,8 +65,27 @@ let formation = {
   shootTimer: 0.8,
 };
 
+const canvasPointer = {
+  active: false,
+  id: null,
+};
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function usesTouchLayout() {
+  return touchQuery.matches;
+}
+
+function updateModeHint() {
+  if (!modeHintNode) {
+    return;
+  }
+
+  modeHintNode.textContent = usesTouchLayout()
+    ? "Touch: drag on the playfield to steer, hold Fire to keep shooting, and tap Restart anytime."
+    : "Keyboard: use A / D or the arrow keys to move, Space to fire, and Enter to restart.";
 }
 
 function intersects(a, b) {
@@ -543,7 +565,13 @@ function drawOverlay() {
     ctx.fillText("GAME OVER", WIDTH / 2, HEIGHT / 2 - 28);
     ctx.font = '400 24px "Trebuchet MS", sans-serif';
     ctx.fillStyle = "#98cab8";
-    ctx.fillText("Press Enter to launch a new run", WIDTH / 2, HEIGHT / 2 + 24);
+    ctx.fillText(
+      usesTouchLayout()
+        ? "Tap Restart or the playfield to launch a new run"
+        : "Press Enter to launch a new run",
+      WIDTH / 2,
+      HEIGHT / 2 + 24,
+    );
     return;
   }
 
@@ -609,6 +637,37 @@ function setInput(action, active) {
   input[action] = active;
 }
 
+function movePlayerToClientX(clientX) {
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width) {
+    return;
+  }
+
+  const pointerX = clamp((clientX - rect.left) / rect.width, 0, 1) * WIDTH;
+  player.x = clamp(pointerX - player.width / 2, 22, WIDTH - 22 - player.width);
+}
+
+function releaseCanvasPointer(pointerId) {
+  if (canvasPointer.id !== null && pointerId !== undefined && pointerId !== canvasPointer.id) {
+    return;
+  }
+
+  if (
+    canvasPointer.id !== null &&
+    typeof canvas.releasePointerCapture === "function" &&
+    canvas.hasPointerCapture?.(canvasPointer.id)
+  ) {
+    try {
+      canvas.releasePointerCapture(canvasPointer.id);
+    } catch {
+      // Ignore pointer capture cleanup errors from browsers that already released it.
+    }
+  }
+
+  canvasPointer.active = false;
+  canvasPointer.id = null;
+}
+
 document.addEventListener("keydown", (event) => {
   if (["ArrowLeft", "ArrowRight", "Space", "KeyA", "KeyD", "Enter"].includes(event.code)) {
     event.preventDefault();
@@ -644,6 +703,7 @@ window.addEventListener("blur", () => {
   input.left = false;
   input.right = false;
   input.fire = false;
+  releaseCanvasPointer();
 });
 
 document.querySelectorAll("[data-action]").forEach((button) => {
@@ -663,5 +723,64 @@ document.querySelectorAll("[data-action]").forEach((button) => {
   button.addEventListener("pointercancel", release);
 });
 
+canvas.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "mouse") {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (state.status === "gameover") {
+    restartGame();
+    return;
+  }
+
+  canvasPointer.active = true;
+  canvasPointer.id = event.pointerId;
+  if (typeof canvas.setPointerCapture === "function") {
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch {
+      // Some browsers reject capture when the pointer is already handled elsewhere.
+    }
+  }
+
+  input.left = false;
+  input.right = false;
+  movePlayerToClientX(event.clientX);
+});
+
+canvas.addEventListener("pointermove", (event) => {
+  if (!canvasPointer.active || event.pointerId !== canvasPointer.id) {
+    return;
+  }
+
+  event.preventDefault();
+  movePlayerToClientX(event.clientX);
+});
+
+canvas.addEventListener("pointerup", (event) => {
+  releaseCanvasPointer(event.pointerId);
+});
+
+canvas.addEventListener("pointercancel", (event) => {
+  releaseCanvasPointer(event.pointerId);
+});
+
+canvas.addEventListener("pointerleave", (event) => {
+  releaseCanvasPointer(event.pointerId);
+});
+
+restartButton?.addEventListener("click", () => {
+  restartGame();
+});
+
+if (typeof touchQuery.addEventListener === "function") {
+  touchQuery.addEventListener("change", updateModeHint);
+} else if (typeof touchQuery.addListener === "function") {
+  touchQuery.addListener(updateModeHint);
+}
+
 restartGame();
+updateModeHint();
 requestAnimationFrame(frame);

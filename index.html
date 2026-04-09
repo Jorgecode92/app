@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#031116" />
     <title>Space Invaders</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -37,6 +38,16 @@
           </div>
         </div>
 
+        <div class="game-meta">
+          <p class="mode-hint" id="mode-hint">
+            Keyboard: use A / D or the arrow keys to move, Space to fire, and
+            Enter to restart.
+          </p>
+          <button type="button" id="restart-button" class="utility-button">
+            Restart
+          </button>
+        </div>
+
         <canvas
           id="game"
           width="960"
@@ -45,8 +56,8 @@
         ></canvas>
 
         <div class="help">
-          <p>Move with <kbd>A</kbd>/<kbd>D</kbd> or the arrow keys.</p>
-          <p>Fire with <kbd>Space</kbd>. Press <kbd>Enter</kbd> to restart.</p>
+          <p>Desktop: move with <kbd>A</kbd>/<kbd>D</kbd> or the arrow keys.</p>
+          <p>Mobile: drag on the playfield to steer, then use the touch buttons.</p>
         </div>
 
         <div class="touch-controls" aria-label="Touch controls">
