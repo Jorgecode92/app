@@ -7,10 +7,13 @@ const levelNode = document.getElementById("level");
 const bestNode = document.getElementById("best");
 const modeHintNode = document.getElementById("mode-hint");
 const restartButton = document.getElementById("restart-button");
+const gameStage = document.querySelector(".game-stage");
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
+const BOARD_RATIO = WIDTH / HEIGHT;
 const STORAGE_KEY = "space-invaders-best-score";
+const TOUCH_LAYOUT_CLASS = "touch-layout";
 const touchQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
 
 const input = {
@@ -58,6 +61,7 @@ let invaders = [];
 let bullets = [];
 let particles = [];
 let shields = [];
+let fitCanvasFrame = 0;
 let formation = {
   direction: 1,
   speed: 52,
@@ -76,6 +80,51 @@ function clamp(value, min, max) {
 
 function usesTouchLayout() {
   return touchQuery.matches;
+}
+
+function scheduleCanvasFit() {
+  if (fitCanvasFrame) {
+    cancelAnimationFrame(fitCanvasFrame);
+  }
+
+  fitCanvasFrame = requestAnimationFrame(() => {
+    fitCanvasFrame = 0;
+    fitCanvasToViewport();
+  });
+}
+
+function fitCanvasToViewport() {
+  if (!canvas || !gameStage) {
+    return;
+  }
+
+  if (!usesTouchLayout()) {
+    canvas.style.removeProperty("width");
+    canvas.style.removeProperty("height");
+    return;
+  }
+
+  const { width: availableWidth, height: availableHeight } = gameStage.getBoundingClientRect();
+  if (!availableWidth || !availableHeight) {
+    return;
+  }
+
+  let fittedWidth = availableWidth;
+  let fittedHeight = fittedWidth / BOARD_RATIO;
+
+  if (fittedHeight > availableHeight) {
+    fittedHeight = availableHeight;
+    fittedWidth = fittedHeight * BOARD_RATIO;
+  }
+
+  canvas.style.width = `${Math.floor(fittedWidth)}px`;
+  canvas.style.height = `${Math.floor(fittedHeight)}px`;
+}
+
+function refreshTouchLayout() {
+  document.body.classList.toggle(TOUCH_LAYOUT_CLASS, usesTouchLayout());
+  updateModeHint();
+  scheduleCanvasFit();
 }
 
 function updateModeHint() {
@@ -775,12 +824,17 @@ restartButton?.addEventListener("click", () => {
   restartGame();
 });
 
+window.addEventListener("resize", scheduleCanvasFit);
+window.addEventListener("orientationchange", scheduleCanvasFit);
+window.visualViewport?.addEventListener("resize", scheduleCanvasFit);
+window.visualViewport?.addEventListener("scroll", scheduleCanvasFit);
+
 if (typeof touchQuery.addEventListener === "function") {
-  touchQuery.addEventListener("change", updateModeHint);
+  touchQuery.addEventListener("change", refreshTouchLayout);
 } else if (typeof touchQuery.addListener === "function") {
-  touchQuery.addListener(updateModeHint);
+  touchQuery.addListener(refreshTouchLayout);
 }
 
 restartGame();
-updateModeHint();
+refreshTouchLayout();
 requestAnimationFrame(frame);
