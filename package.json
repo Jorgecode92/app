@@ -1,0 +1,19 @@
+{
+  "name": "space-invaders-defense-grid",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node tools/dev-server.mjs . 3000",
+    "build": "node tools/build.mjs",
+    "preview": "node tools/dev-server.mjs dist 4173",
+    "lint": "node tools/lint-review-safety.mjs",
+    "package": "node tools/package-tiktok.mjs",
+    "ttmg:init": "ttmg init --h5",
+    "ttmg:dev": "ttmg dev",
+    "ttmg:build": "ttmg build"
+  }
+}

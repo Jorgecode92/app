@@ -8,3 +8,7 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# generated mini game build artifacts
+dist/
+release/

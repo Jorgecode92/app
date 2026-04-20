@@ -1,0 +1,12 @@
+{
+  "projectName": "space-invaders-defense-grid",
+  "clientKey": "TIKTOK_CLIENT_KEY",
+  "entry": "index.html",
+  "sourceDir": "dist",
+  "runtime": "html",
+  "orientation": "portrait",
+  "trustedDomains": [
+    "https://api.example.com",
+    "https://analytics.example.com"
+  ]
+}

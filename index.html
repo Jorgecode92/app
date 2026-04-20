@@ -1,121 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://connect.tiktok-minis.com/game/sdk.js"></script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#091120" />
-    <title>Space Invaders</title>
+    <meta name="theme-color" content="#090c08" />
+    <meta
+      name="description"
+      content="A mobile-first arcade defense shooter prepared for TikTok Mini Games HTML runtime."
+    />
+    <title>Space Invaders: Defense Grid</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="ambient ambient-one" aria-hidden="true"></div>
-    <div class="ambient ambient-two" aria-hidden="true"></div>
-    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="sky-noise" aria-hidden="true"></div>
 
-    <main class="app-shell">
-      <section class="intro-panel">
-        <div class="hero-card">
+    <main class="game-shell">
+      <header class="top-bar">
+        <div>
           <p class="eyebrow">Retro Reloaded</p>
-          <h1>Space <span>Invaders</span></h1>
-          <p class="lede">
-            Classic defense gameplay rebuilt with a polished command-center look
-            and touch-ready controls.
-          </p>
+          <h1>Defense Grid</h1>
         </div>
+        <div class="top-actions">
+          <button type="button" class="icon-button" data-pause aria-label="Pause">II</button>
+          <button type="button" class="icon-button" data-open-shop aria-label="Shop">$</button>
+          <button type="button" class="icon-button" data-open-settings aria-label="Settings">S</button>
+        </div>
+      </header>
 
-        <div class="info-grid">
-          <article class="info-card">
-            <p class="card-label">Mission Brief</p>
-            <h2>Protect the lower corridor.</h2>
-            <p>
-              Clear every wave before the formation drops beyond your defense
-              line.
-            </p>
-          </article>
+      <section class="status-strip" aria-label="Runtime status">
+        <span id="platform-status" data-tone="loading">Loading platform</span>
+        <span id="run-status">Booting</span>
+      </section>
 
-          <article class="info-card">
-            <p class="card-label">Control Loop</p>
-            <div class="control-tags">
-              <span><kbd>A</kbd><kbd>D</kbd> Move</span>
-              <span><kbd>Space</kbd> Fire</span>
-              <span>Drag to steer</span>
-            </div>
-          </article>
+      <section class="hud" aria-label="Game stats">
+        <div class="stat">
+          <span>Score</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="stat">
+          <span>Lives</span>
+          <strong id="lives">3</strong>
+        </div>
+        <div class="stat">
+          <span>Wave</span>
+          <strong id="wave">1</strong>
+        </div>
+        <div class="stat">
+          <span>Shield</span>
+          <strong id="shield">0</strong>
+        </div>
+        <div class="stat">
+          <span>Coins</span>
+          <strong id="coins">0</strong>
+        </div>
+        <div class="stat">
+          <span>Best</span>
+          <strong id="best">0</strong>
         </div>
       </section>
 
-      <section class="play-panel">
-        <div class="panel-head">
-          <div class="panel-copy">
-            <p class="card-label">Live Session</p>
-            <h2>Defense Grid</h2>
-          </div>
-          <button type="button" id="restart-button" class="utility-button">
-            New Run
-          </button>
-        </div>
-
-        <p class="mode-hint" id="mode-hint">
-          Keyboard: use A / D or the arrow keys to move, Space to fire, and
-          Enter to restart.
-        </p>
-
-        <div class="hud" aria-label="Game stats">
-          <div class="stat">
-            <span>Score</span>
-            <strong id="score">0</strong>
-          </div>
-          <div class="stat">
-            <span>Lives</span>
-            <strong id="lives">3</strong>
-          </div>
-          <div class="stat">
-            <span>Wave</span>
-            <strong id="level">1</strong>
-          </div>
-          <div class="stat">
-            <span>Best</span>
-            <strong id="best">0</strong>
-          </div>
-        </div>
-
-        <div class="stage-frame">
-          <div class="stage-meta">
-            <span class="status-pill">
-              <span class="status-dot" aria-hidden="true"></span>
-              Arena Online
-            </span>
-            <span class="stage-copytext">Arcade defense simulation</span>
-          </div>
-
-          <div class="game-stage">
-            <canvas
-              id="game"
-              width="960"
-              height="640"
-              aria-label="Space Invaders game field"
-            ></canvas>
-          </div>
-        </div>
-
-        <div class="help">
-          <p>Desktop: move with <kbd>A</kbd>/<kbd>D</kbd> or the arrow keys.</p>
-          <p>Mobile: drag on the playfield to steer, then use the touch buttons.</p>
-        </div>
-
-        <div class="touch-controls" aria-label="Touch controls">
-          <button type="button" data-action="left">Left</button>
-          <button type="button" data-action="fire" class="fire-button">
-            Fire
-          </button>
-          <button type="button" data-action="right">Right</button>
+      <section class="playfield-wrap" aria-label="Arcade playfield">
+        <div class="game-stage">
+          <canvas
+            id="game"
+            width="720"
+            height="960"
+            aria-label="Space Invaders defense game field"
+          ></canvas>
         </div>
       </section>
+
+      <section class="touch-controls" aria-label="Touch controls">
+        <button type="button" data-action="left">Left</button>
+        <button type="button" data-action="fire" class="fire-button">Fire</button>
+        <button type="button" data-action="right">Right</button>
+      </section>
+
+      <nav class="bottom-actions" aria-label="Game actions">
+        <button type="button" data-start-run>New Run</button>
+        <button type="button" data-open-shop>Shop</button>
+        <button type="button" data-open-settings>Settings</button>
+      </nav>
     </main>
 
-    <script src="game.js"></script>
+    <div class="overlay" id="loading-overlay" role="status" aria-live="polite">
+      <div class="modal-panel compact">
+        <p class="eyebrow">Loading</p>
+        <h2>Powering Grid</h2>
+        <div class="loader-bar" aria-hidden="true"><span></span></div>
+      </div>
+    </div>
+
+    <div class="overlay" id="start-overlay" hidden>
+      <div class="modal-panel">
+        <p class="eyebrow">Tap To Play</p>
+        <h2>Fast Runs. Clean Waves.</h2>
+        <div class="summary-row">
+          <span>Best <strong id="start-best">0</strong></span>
+          <span>Coins <strong id="start-coins">0</strong></span>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-start-run>Launch</button>
+          <button type="button" id="daily-button">Daily +45</button>
+          <button type="button" id="shortcut-button">Shortcut +120</button>
+        </div>
+        <div class="modal-actions secondary">
+          <button type="button" data-open-shop>Shop</button>
+          <button type="button" data-open-settings>Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="pause-overlay" hidden>
+      <div class="modal-panel compact">
+        <p class="eyebrow">Paused</p>
+        <h2>Run Held</h2>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-resume>Resume</button>
+          <button type="button" data-open-start>Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="revive-overlay" hidden>
+      <div class="modal-panel">
+        <p class="eyebrow">One Revive</p>
+        <h2>Restore The Line</h2>
+        <p id="revive-copy" class="modal-copy">One revive is available for this run.</p>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-watch-revive>Watch To Revive</button>
+          <button type="button" data-skip-revive>End Run</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay" hidden>
+      <div class="modal-panel">
+        <p class="eyebrow">Run Summary</p>
+        <h2>Grid Offline</h2>
+        <p id="final-reason" class="modal-copy">Defense grid collapsed</p>
+        <div class="summary-grid">
+          <span>Score <strong id="final-score">0</strong></span>
+          <span>Wave <strong id="final-wave">1</strong></span>
+          <span>Coins <strong id="final-coins">0</strong></span>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-start-run>Retry</button>
+          <button type="button" id="double-coins-button">Double Coins</button>
+        </div>
+        <div class="modal-actions secondary">
+          <button type="button" data-open-shop>Shop</button>
+          <button type="button" data-open-start>Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="shop-overlay" hidden>
+      <div class="modal-panel wide">
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow">Hangar</p>
+            <h2>Unlocks</h2>
+          </div>
+          <span class="coin-pill"><strong id="shop-coins">0</strong> coins</span>
+        </div>
+        <div class="shop-grid" id="shop-grid"></div>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-close-overlay>Done</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="settings-overlay" hidden>
+      <div class="modal-panel compact">
+        <p class="eyebrow">Settings</p>
+        <h2>Runtime</h2>
+        <label class="toggle-row">
+          <span>Sound</span>
+          <input type="checkbox" id="sound-toggle" />
+        </label>
+        <label class="toggle-row">
+          <span>Browser ad mock succeeds</span>
+          <input type="checkbox" id="mock-ads-toggle" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="primary" data-close-overlay>Done</button>
+        </div>
+        <p class="legal-links">
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
