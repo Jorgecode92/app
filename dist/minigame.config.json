@@ -1,0 +1,27 @@
+{
+  "projectName": "space-invaders-defense-grid",
+  "appName": "Space Invaders: Defense Grid",
+  "client_key": "TIKTOK_CLIENT_KEY",
+  "clientKey": "TIKTOK_CLIENT_KEY",
+  "orientation": "portrait",
+  "entry": "index.html",
+  "sourceDir": "dist",
+  "outputDir": "dist",
+  "version": "0.1.0",
+  "bundleId": "com.jorgerobles.defensegrid",
+  "navigationBar": {
+    "backgroundColor": "#090c08",
+    "textStyle": "white"
+  },
+  "ads": {
+    "rewardedVideoAdUnitId": "TIKTOK_REWARDED_AD_UNIT_ID"
+  },
+  "trustedDomains": [
+    "https://api.example.com",
+    "https://analytics.example.com"
+  ],
+  "support": {
+    "privacyPolicy": "https://game.jorge-robles.com/privacy.html",
+    "termsOfService": "https://game.jorge-robles.com/terms.html"
+  }
+}

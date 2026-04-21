@@ -6,22 +6,68 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#031116" />
+    <meta name="theme-color" content="#091120" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8355960498779499"
+      crossorigin="anonymous"
+    ></script>
     <title>Space Invaders</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="page">
-      <section class="hero">
-        <p class="eyebrow">Arcade Prototype</p>
-        <h1>Space Invaders</h1>
-        <p class="lede">
-          Hold the line, clear each wave, and keep the mothership from breaking
-          through.
-        </p>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <main class="app-shell">
+      <section class="intro-panel">
+        <div class="hero-card">
+          <p class="eyebrow">Retro Reloaded</p>
+          <h1>Space <span>Invaders</span></h1>
+          <p class="lede">
+            Classic defense gameplay rebuilt with a polished command-center look
+            and touch-ready controls.
+          </p>
+        </div>
+
+        <div class="info-grid">
+          <article class="info-card">
+            <p class="card-label">Mission Brief</p>
+            <h2>Protect the lower corridor.</h2>
+            <p>
+              Clear every wave before the formation drops beyond your defense
+              line.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <p class="card-label">Control Loop</p>
+            <div class="control-tags">
+              <span><kbd>A</kbd><kbd>D</kbd> Move</span>
+              <span><kbd>Space</kbd> Fire</span>
+              <span>Drag to steer</span>
+            </div>
+          </article>
+        </div>
       </section>
 
-      <section class="game-shell">
+      <section class="play-panel">
+        <div class="panel-head">
+          <div class="panel-copy">
+            <p class="card-label">Live Session</p>
+            <h2>Defense Grid</h2>
+          </div>
+          <button type="button" id="restart-button" class="utility-button">
+            New Run
+          </button>
+        </div>
+
+        <p class="mode-hint" id="mode-hint">
+          Keyboard: use A / D or the arrow keys to move, Space to fire, and
+          Enter to restart.
+        </p>
+
         <div class="hud" aria-label="Game stats">
           <div class="stat">
             <span>Score</span>
@@ -41,23 +87,23 @@
           </div>
         </div>
 
-        <div class="game-meta">
-          <p class="mode-hint" id="mode-hint">
-            Keyboard: use A / D or the arrow keys to move, Space to fire, and
-            Enter to restart.
-          </p>
-          <button type="button" id="restart-button" class="utility-button">
-            Restart
-          </button>
-        </div>
+        <div class="stage-frame">
+          <div class="stage-meta">
+            <span class="status-pill">
+              <span class="status-dot" aria-hidden="true"></span>
+              Arena Online
+            </span>
+            <span class="stage-copytext">Arcade defense simulation</span>
+          </div>
 
-        <div class="game-stage">
-          <canvas
-            id="game"
-            width="960"
-            height="640"
-            aria-label="Space Invaders game field"
-          ></canvas>
+          <div class="game-stage">
+            <canvas
+              id="game"
+              width="960"
+              height="640"
+              aria-label="Space Invaders game field"
+            ></canvas>
+          </div>
         </div>
 
         <div class="help">
